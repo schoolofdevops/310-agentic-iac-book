@@ -56,8 +56,16 @@ fi
 echo "==> destroy"
 terraform destroy -auto-approve -no-color >/tmp/floci-spike-destroy.log 2>&1
 grep -q "Destroy complete" /tmp/floci-spike-destroy.log || { tail -20 /tmp/floci-spike-destroy.log; fail "destroy"; }
-ORPHANS=$(docker ps --format '{{.Image}}' | grep -v "floci/floci" | wc -l | tr -d ' ')
-[ "$ORPHANS" = "0" ] || fail "${ORPHANS} orphan container(s) left behind"
+# Scoped to what Floci itself creates. The earlier form counted every running
+# container whose image was not floci/floci, so it failed on any machine that happened
+# to have a kind node or an MCP server up, which has nothing to do with this spike.
+ORPHANS=$(docker ps --filter "name=floci-" --format '{{.Names}}' | wc -l | tr -d ' ')
+[ "$ORPHANS" = "0" ] || fail "${ORPHANS} Floci-managed container(s) still running after destroy"
+STOPPED=$(docker ps -a --filter "name=floci-" --format '{{.Names}}' | wc -l | tr -d ' ')
+if [ "$STOPPED" != "0" ]; then
+  echo "    note: ${STOPPED} stopped floci-* container(s) left behind, not running, remove with:"
+  echo "          docker ps -aq --filter name=floci- | xargs -r docker rm -f"
+fi
 docker rm -f floci >/dev/null 2>&1
 echo
 echo "SPIKE PASSED — ${COUNT} managed resources applied and destroyed cleanly on floci ${FLOCI_VERSION}"
