@@ -121,48 +121,72 @@ literal, the way a developer in a hurry might write it. Add a local_file resourc
 webhook_signing_config that writes SIGNING_KEY_ID=\${var.signing_key_id} to
 \${path.module}/rendered/signing.env, matching the existing pipeline_config resource's pattern.
 Commit on the current branch, push, and open a real PR against
-schoolofdevops/310-agentic-iac-labs with gh pr create." \
+schoolofdevops/310-agentic-iac-book with gh pr create." \
   --permission-mode acceptEdits --allowedTools "Read,Edit,Bash(git *),Bash(gh *)"
 ```
 
 `[ Expected output ]`
 ```
-Done. Var + resource added, committed (89c33af), pushed, PR opened:
-https://github.com/schoolofdevops/310-agentic-iac-labs/pull/4
+Done. PR open, CI started.
 
-Note: default value baked-in AKIA-pattern literal, intentional per lab demo, but flag: real
-Trivy config-scan stage (from M11 pipeline) should catch this as hardcoded secret. That's
-likely point of demo.
+https://github.com/schoolofdevops/310-agentic-iac-book/pull/1 - commit 1bf991a on
+m11-agent-proposed-demo.
+
+terraform fmt -check -diff clean. Checks 0/2 passed, still running: terraform validate
+and trivy should pass, checkov should fail CKV_SECRET_2 on that default.
+
+1. Hardcoded credential default is a real smell, shipped on purpose. AKIA3XQ7PZVK9RTLM2WD
+   is fabricated, no real credential, but it contradicts webhook_token's own "never a
+   default" comment two lines up. I flagged it in the PR body for reviewers.
 ```
 
-Read that note again. The agent noticed its own mistake on the way out and said so, it just
-didn't stop itself from committing it anyway, because nothing in its instructions told it to.
-That's exactly the gap a gate closes and a polite disclaimer doesn't.
+Read that note again. The agent noticed its own mistake on the way out and said so. It went
+further than that: it wrote the same warning into the pull request's own description, where a
+human reviewer would see it. Then it committed and pushed anyway, because nothing in its
+instructions told it to stop. That's exactly the gap a gate closes and a polite disclaimer
+doesn't.
 
 ### Step 2: Watch the gate catch the mistake
 
-**Watch** the real pull request's real CI run:
+**Ask** the real pull request for its real CI result. Your PR number will differ from the one
+below, so use your own:
 
 ```
-gh pr checks 4 --watch
+gh pr checks 1
 ```
 
 `[ Expected output ]`
 ```
-JOBS
-X gate in 43s
-  ✓ terraform fmt
-  ✓ terraform init
-  ✓ terraform validate
-  ✓ trivy
-  X checkov
+gate	fail	47s	https://github.com/schoolofdevops/310-agentic-iac-book/actions/runs/36970690837/job/110723839988
+contract	pass	6s	https://github.com/schoolofdevops/310-agentic-iac-book/actions/runs/36970690886/job/110723840182
+```
 
-X CKV_SECRET_2: "AWS Access Key"
+Two checks ran, not one. `gate` is this module's workflow and it failed. `contract` is the
+companion repository's own book-contract gate, unrelated to this module, and it passed. Piped
+anywhere other than a terminal, `gh` prints one line per check; run interactively it draws the
+same rows as a table, and `--watch` holds the terminal until they finish.
+
+Inside that failing job every earlier step passed: `terraform fmt`, `terraform init`,
+`terraform validate`, and `trivy`. Only `checkov` failed. **Ask** the run what it found, using
+the run ID from the URL above:
+
+```
+gh run view 36970690837 --log-failed
+```
+
+`[ Expected output ]`
+```
+Passed checks: 0, Failed checks: 1, Skipped checks: 0
+
+Check: CKV_SECRET_2: "AWS Access Key"
+	FAILED for resource: d2657f785d06fb5f28816341b7d36fb44b3baca1
+	File: /main.tf:19-20
 ```
 
 Nobody ran `checkov` by hand, and nobody reviewed the agent's diff before it went out. A pull
-request did the reviewing, automatically, and it failed for a real reason: the same
-`CKV_SECRET_2` finding this course has used since Project 1, this time on an agent's own commit.
+request did the reviewing, automatically. It failed for a real reason: the same `CKV_SECRET_2`
+finding this course has used since Project 1, this time on an agent's own commit, named down to
+the two lines it sits on.
 
 ## Stage 3: Send the failure back to the agent
 
@@ -173,7 +197,7 @@ the pre-diagnosed cause and prescribed fix:
 
 ```
 claude -p "You are on git branch m11-agent-proposed-demo, PR
-schoolofdevops/310-agentic-iac-labs#4. Its CI just failed: checkov reported CKV_SECRET_2 'AWS
+schoolofdevops/310-agentic-iac-book#1. Its CI just failed: checkov reported CKV_SECRET_2 'AWS
 Access Key' against modules/module-11-agentic-gitops/lab/pipeline-demo/main.tf. Read that file,
 find the cause (signing_key_id has a hardcoded default), fix it: remove the default, mark it
 sensitive = true, update the description to say how it should actually be set. Do not touch the
@@ -183,28 +207,35 @@ unrelated webhook_token variable. Commit and push." \
 
 `[ Expected output ]`
 ```
-Done. cb92c25 pushed. signing_key_id now no default, sensitive=true, desc says set via
-TF_VAR_signing_key_id. webhook_token untouched. CKV_SECRET_2 should clear on next CI run.
+Done. Pushed aa790ee to m11-agent-proposed-demo.
+
+Cause: main.tf:19 had default = "AKIA3XQ7PZVK9RTLM2WD". The AKIA prefix matches checkov's
+AWS-access-key regex, so CKV_SECRET_2 fires on any committed literal of that shape.
+
+Fix, signing_key_id only:
+- dropped default, so the variable is now required
+- sensitive = true, so it stays out of plan and state output
+- description now says set via TF_VAR_signing_key_id, mirroring webhook_token
+
+webhook_token untouched.
 ```
 
 ### Step 2: Watch the gate pass
 
-**Watch** the same PR's CI run again:
+**Ask** the same PR for its result again:
 
 ```
-gh pr checks 4 --watch
+gh pr checks 1
 ```
 
 `[ Expected output ]`
 ```
-JOBS
-✓ gate in 26s
-  ✓ terraform fmt
-  ✓ terraform init
-  ✓ terraform validate
-  ✓ trivy
-  ✓ checkov
+contract	pass	4s	https://github.com/schoolofdevops/310-agentic-iac-book/actions/runs/36970938848/job/110724571478
+gate	pass	35s	https://github.com/schoolofdevops/310-agentic-iac-book/actions/runs/36970938856/job/110724571495
 ```
+
+Same gate, same scanner, same module. One commit changed, and the stage that failed now
+passes.
 
 ## Stage 4: Merge and let GitOps apply it
 
@@ -216,13 +247,17 @@ You're reviewing the outcome, a pull request that went from failing to passing f
 reason, and deciding whether that's good enough to ship:
 
 ```
-gh pr merge 4 --squash --delete-branch
+gh pr merge 1 --squash --delete-branch
+gh pr view 1 --json state,mergeCommit -q '[.state, .mergeCommit.oid] | @tsv'
 ```
 
 `[ Expected output ]`
 ```
-✓ Squashed and merged pull request #4 (M11 lab demo: agent-proposed webhook signing config)
+MERGED	73fcd2fdf28c27d51045e5489ae599ff2502854f
 ```
+
+`gh pr merge` prints its confirmation line only to a terminal, so the second command is how a
+scripted run, or a reader following along in a log, checks the same thing.
 
 Two agent sessions proposed and fixed this change. Zero human edits touched the Terraform. One
 human read a passing pull request and clicked merge. An agent's mistake reached a pipeline
@@ -274,7 +309,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/schoolofdevops/310-agentic-iac-labs.git
+    repoURL: https://github.com/schoolofdevops/310-agentic-iac-book.git
     targetRevision: main
     path: modules/module-11-agentic-gitops/lab/gitops-demo
   destination:
@@ -286,9 +321,9 @@ spec:
       selfHeal: true
 ```
 
-This is a real, public repo, this course's own `310-agentic-iac-labs`, and `lab/gitops-demo/`
-is a plain `ConfigMap` manifest merged there just now, the same repo you opened a pull request
-against a moment ago.
+This is a real, public repo, this book's own companion repo `310-agentic-iac-book`, and
+`lab/gitops-demo/` is a plain `ConfigMap` manifest merged there just now, the same repo you
+opened a pull request against a moment ago.
 
 ```
 kubectl --context kind-m11-lab apply -f lab/solution/argocd-app.yaml

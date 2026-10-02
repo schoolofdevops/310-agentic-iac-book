@@ -66,7 +66,7 @@ BY_DESIGN = {
         "written by the agent in the chapter's acceptEdits run; lab/requests/ ships empty",
     ("12", "lab/solution/work"):
         "created by loop.sh at runtime; the printed command before it is rm -rf on this path",
-    ("11", "labs/pull/4"):
+    ("11", "book/pull/1"):
         "the tail of this repository's pull-request URL, not a path in the tree",
 }
 
