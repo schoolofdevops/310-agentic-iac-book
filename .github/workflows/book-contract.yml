@@ -1,0 +1,19 @@
+name: Book contract
+
+# The book is printed. This repository has to keep matching it. Runs on every push and
+# pull request to main, and on every chNN branch, because a frozen branch that quietly
+# stops satisfying its chapter is the failure this gate exists to catch.
+
+on:
+  push:
+    branches: [main, 'ch[0-9][0-9]']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: every printed command and named path is real in this tree
+        run: ./tools/check-book-contract.sh
