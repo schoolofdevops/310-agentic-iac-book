@@ -88,7 +88,7 @@ hook doesn't care whether the claim sounds confident. It cares whether the evide
 ### Try it: the verification hook simulator
 
 Pick a claim, toggle real evidence on and off, and watch the same regex logic from
-`verify_claim.sh` decide block or pass, live: [Verification Hook Simulator](../explainer/sim/verification-hook-sim.html).
+`verify_claim.sh` decide block or pass, live: [Verification Hook Simulator](./sim/verification-hook-sim.html).
 
 ## A Skill States the Rule, a Hook Enforces It
 
@@ -114,8 +114,8 @@ You have a missing hook.
 
 ## What Has to Be True Before You Loop
 
-The course's own house rule, stated in `CLAUDE.md` from day one, applies directly here: never add a
-loop on top of a broken harness. Module 12 teaches looping, an agent running multiple iterations
+The course's own house rule, stated in Module 3 and repeated at every layer since, applies
+directly here: never add a loop on top of a broken harness. Module 12 teaches looping, an agent running multiple iterations
 with a human reviewing outcomes rather than every single step. That only works if the harness
 underneath it actually catches mistakes. A loop on top of a broken harness doesn't fix anything,
 it just repeats the same unbacked claims faster, with a human watching less closely each time.

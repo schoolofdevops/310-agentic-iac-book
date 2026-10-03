@@ -237,8 +237,8 @@ names.
 ## Stage 3: Find a real root cause, the 3-Fix Rule
 
 The third discipline. `lab/debug/main.tf` has a real bug, not staged: it uses `endpoint_url`, the
-argument name Floci's own README shows. `CLAUDE.md`'s own retired-tools table already flags this,
-you're about to see why it's flagged.
+argument name Floci's own README shows. M04 already flagged that argument as the wrong
+syntax, and you're about to see why.
 
 ### Step 1: Reproduce the real bug
 

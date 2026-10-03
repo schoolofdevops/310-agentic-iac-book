@@ -1,7 +1,7 @@
 # Capstone rubric: the pipeline diagram, staged
 
-Every stage of the course thesis pipeline (`CLAUDE.md`), mapped to what this capstone
-actually built and which module taught it first.
+Every stage of the course thesis pipeline, the one Module 1 states and every module
+since has built one more piece of, mapped to what this capstone actually built and which module taught it first.
 
 ```
 Spec+context → Agent generates → validate (fmt/plan)
