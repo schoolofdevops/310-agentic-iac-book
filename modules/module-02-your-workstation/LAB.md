@@ -49,6 +49,37 @@ docker info
 If any of these fail, fix them before continuing. This project doesn't introduce anything
 beyond what M01 already needed, plus the agent CLI itself.
 
+## Where your work goes, and where the answers live
+
+Read this once before you start, because this project's `lab/` directory holds two different
+kinds of thing and they are easy to mistake for each other.
+
+```
+modules/module-02-your-workstation/lab/
+  starter/              shipped. The deliberately broken version. Start here
+  solution/
+    step1-suggested/    shipped. The reference answer for step 1
+    step2-drafted/        step 2
+    step3-acceptedits/    step 4
+  run.sh                shipped. Checks the three solution/ versions
+
+  step1-suggested/      YOU create this, in step 1
+  step2-drafted/        YOU create this, in step 2
+  plan-preview/         YOU create this, in step 3
+  step3-acceptedits/    YOU create this, in step 4
+```
+
+The four directories at the bottom do not exist when you clone. You make each one as you reach
+that step, and the lab's own `.gitignore` keeps your copies out of git, so your work never
+collides with the shipped files.
+
+The three under `solution/` are the finished answers. They already carry the `abspath()` fix
+this project asks you to discover, which is the point: you find the bug in your own copy, then
+compare. Read them after you have tried the step, not before.
+
+`run.sh` checks `solution/`, never your copies. It is validating that the shipped answers are
+still correct, not grading your work.
+
 ## Two real dials: which tools, and how much permission
 
 Before you run anything, know what you're actually turning on and off. Claude Code gives you
