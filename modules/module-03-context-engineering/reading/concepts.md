@@ -194,7 +194,7 @@ partway through. If the only record of "here's what's done and here's what's
 next" lives in a conversation that's about to get cleared or compacted, that
 record is one reset away from gone.
 
-![A task's plan and progress written to a STATE.md file on disk instead of held only in the conversation, so a brand new session with zero memory reads the file and continues correctly.](./diagrams/route-wall.svg)
+![A task's plan and progress written to a STATE.md file on disk instead of held only in the conversation, so a brand new session with no prior conversation reads the file and continues correctly.](./diagrams/route-wall.svg)
 
 The fix is the same discipline a real on-call rotation already runs on: write
 the handoff down. Not in your head, not only in the chat, on disk, as a file the

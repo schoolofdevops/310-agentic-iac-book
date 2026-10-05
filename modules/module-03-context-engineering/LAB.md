@@ -7,7 +7,7 @@ In this project, you will build one small Terraform module three times: an
 nginx container serving a static page, with a sidecar credential for shipping
 its access logs to S3. Each build proves a different claim about context
 engineering: what a noisy scan actually costs you, what changes when you write
-standing context down, and what survives a session with zero memory.
+standing context down, and what survives a session with no prior conversation.
 
 **What you're building, at a glance:**
 
@@ -17,7 +17,7 @@ standing context down, and what survives a session with zero memory.
   `AGENTS.md`, once with one
 - A real hardcoded secret, caught by checkov, then fixed by writing the
   missing convention down
-- A real `STATE.md` handed to a session with zero memory, verified to finish
+- A real `STATE.md` handed to a session with no prior conversation, verified to finish
   the job correctly
 - A checkov-clean nginx module, plus three pieces of evidence for the three
   disciplines in `reading/concepts.md`: **Reduce**, filtering noisy tool
@@ -51,7 +51,7 @@ wc -c /tmp/verbose.txt /tmp/compact.txt
 
 `[ Approximate output ]`
 ```
-   25605 /tmp/verbose.txt
+   25680 /tmp/verbose.txt
     3881 /tmp/compact.txt
 ```
 
@@ -279,7 +279,11 @@ confirm exit 0.
 ### Step 2: Hand it to a fresh session
 
 **Close that terminal, or open a brand new one.** The point only holds if the
-next command starts with genuinely zero memory of what you just did:
+next command starts with no prior conversation history for this task. "Fresh" means
+a fresh conversation, not zero context: a client may still preload repository
+instructions or its own memory, so confirm which project instructions are loaded and
+turn auto memory off for this experiment. The only task-specific standing context that
+should differ between the two runs is the lab's own `AGENTS.md`:
 
 ```
 cd modules/module-03-context-engineering/lab/route
@@ -365,7 +369,7 @@ What you built:
   `AGENTS.md`, once with one
 - Caught a real hardcoded secret with checkov, then fixed it by writing the
   missing convention down, not by arguing with the agent
-- Wrote a real `STATE.md`, handed it to a session with zero memory, and
+- Wrote a real `STATE.md`, handed it to a session with no prior conversation, and
   verified it finished the job correctly
 
 None of this was a cleverer prompt or a bigger model. It was managing a
