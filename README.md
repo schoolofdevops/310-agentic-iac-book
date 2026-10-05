@@ -10,25 +10,33 @@ text. You want it the moment you decide to run something yourself.
 
 **All thirteen chapters are here.** Twelve modules plus the capstone, complete.
 
-## Branch policy
+## Where each chapter's material lives
 
-One policy, the same one the Preface states:
+The book cites these paths directly. `main` is the state the book was written and verified
+against, so a path printed in a chapter resolves here exactly as printed.
 
-| Branch | What it is |
+| Chapter | Path |
 |---|---|
-| `main` | tracks current tool versions. Errata and version bumps land here |
-| `ch01` … `ch13` | **frozen to what is printed** in that chapter |
+| 1 | `modules/module-01-clickops-to-agents/` |
+| 2 | `modules/module-02-your-workstation/` |
+| 3 | `modules/module-03-context-engineering/` |
+| 4 | `modules/module-04-agent-skills/` |
+| 5 | `modules/module-05-mcp-tool-layer/` |
+| 6 | `modules/module-06-guardrails/` |
+| 7 | `modules/module-07-spec-driven-infra/` |
+| 8 | `modules/module-08-harness-engineering/` |
+| 9 | `modules/module-09-verifying-ai-infra/` |
+| 10 | `modules/module-10-agentic-kubernetes/` |
+| 11 | `modules/module-11-agentic-gitops/` |
+| 12 | `modules/module-12-loop-multiagent-economics/` |
+| 13 | `capstone/` |
 
-If you want the exact code as printed in a given chapter, check out that chapter's branch:
+Chapters 3, 4 and 9 also run against `labs/shared/floci-spike/`, the pinned local AWS
+emulator every Tier 1 lab uses.
 
-```
-git clone https://github.com/schoolofdevops/310-agentic-iac-book.git
-cd 310-agentic-iac-book
-git checkout ch09
-```
-
-`main` will have moved on by the time you read this. That is by design, not drift. The
-`chNN` branches never move.
+A gate in this repository checks that claim on every push: `./tools/check-book-contract.sh`
+asserts that all 176 commands the book prints appear verbatim in a lab file here, and that
+every path a chapter names resolves. Run it yourself.
 
 ## Quick start
 

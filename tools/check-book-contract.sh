@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # check-book-contract.sh — the gate that keeps this repository's promise to the book.
 #
-# The book prints 174 commands and names a set of paths. Every one of them has to be real
-# here, on whichever branch you are standing on. This is the public half of check 9 in the
+# The book prints 176 commands and names a set of paths. Every one of them has to be real
+# here, on main, which is what the chapters cite. This is the public half of check 9 in the
 # private authoring repo: that one asserts the manuscript matches the labs, this one
 # asserts the labs still match the manuscript.
 #
@@ -14,9 +14,8 @@
 # path resolves. Three paths are absent by design and listed as such in the script; they
 # are things the reader's own agent writes during the lab.
 #
-# Run it on a chNN branch and it checks that frozen chapter's tree. Run it on main and it
-# checks whether main has drifted from print, which it is allowed to do for tool versions
-# but not for structure.
+# The book cites paths on main, so main is what this checks. Anything that moves main away
+# from what a chapter prints is a broken promise, and this is what catches it.
 
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
