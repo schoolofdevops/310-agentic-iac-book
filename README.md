@@ -1,85 +1,15 @@
-# Agentic Infrastructure as Code — the book's companion repository
+# Moved
 
-This is the frozen companion repository for the book *Agentic Infrastructure as Code: AI
-Agents for DevOps*. It carries the runnable version of every command, every config, and
-every narrated build in the book: thirteen chapters' worth of labs, specs, policy bundles,
-reading material and the capstone.
+This repository was a stopgap companion for *Agentic Infrastructure as Code: AI Agents for
+DevOps*, created before the publisher's own repository existed. It is no longer maintained
+and nothing in the book points here.
 
-You do not need it to read the book. Every important piece of output is reproduced in the
-text. You want it the moment you decide to run something yourself.
+**The book's companion repository is:**
 
-**All thirteen chapters are here.** Twelve modules plus the capstone, complete.
+### https://github.com/PacktPublishing/The-AI-Driven-Infrastructure-as-Code-Handbook
 
-## Where each chapter's material lives
+Everything that was here is there, and that is the only copy that gets updated. Chapter 11's
+pull request, its CI runs and its merge all live there too: the whole sequence was run again
+in that repository so the chapter cites the repository it actually ran in.
 
-The book cites these paths directly. `main` is the state the book was written and verified
-against, so a path printed in a chapter resolves here exactly as printed.
-
-| Chapter | Path |
-|---|---|
-| 1 | `modules/module-01-clickops-to-agents/` |
-| 2 | `modules/module-02-your-workstation/` |
-| 3 | `modules/module-03-context-engineering/` |
-| 4 | `modules/module-04-agent-skills/` |
-| 5 | `modules/module-05-mcp-tool-layer/` |
-| 6 | `modules/module-06-guardrails/` |
-| 7 | `modules/module-07-spec-driven-infra/` |
-| 8 | `modules/module-08-harness-engineering/` |
-| 9 | `modules/module-09-verifying-ai-infra/` |
-| 10 | `modules/module-10-agentic-kubernetes/` |
-| 11 | `modules/module-11-agentic-gitops/` |
-| 12 | `modules/module-12-loop-multiagent-economics/` |
-| 13 | `capstone/` |
-
-Chapters 3, 4 and 9 also run against `labs/shared/floci-spike/`, the pinned local AWS
-emulator every Tier 1 lab uses.
-
-A gate in this repository checks that claim on every push: `./tools/check-book-contract.sh`
-asserts that all 176 commands the book prints appear verbatim in a lab file here, and that
-every path a chapter names resolves. Run it yourself.
-
-## Quick start
-
-Install the pinned tools first — every exact version and install command is in Appendix A.
-Then:
-
-```
-docker compose -f labs/shared/docker-compose.floci.yml up -d
-cd labs/shared/floci-spike && ./run.sh
-```
-
-Lab tiers 0, 1 and 2 cost nothing and need no cloud account. Tier 3 is optional, capstone
-only, and ends with a numbered `terraform destroy`.
-
-## Layout
-
-```
-modules/module-NN-*/
-  LAB.md            the chapter's hands-on project, copy-pasteable
-  README.md         delivery guide
-  QUIZ.md           the chapter's questions, with collapsible answers
-  PROJECTS.md       stretch projects, hints not solutions
-  lab/              the runnable material: starter, solution, run.sh, policy, hooks
-  reading/          concepts.md (the standalone read) and reference.md (the cheat sheet)
-  explainer/sim/    the chapter's interactive simulator, a single self-contained HTML file
-capstone/           spec.md, rubric.md, AGENTS.md, and all three lab tiers
-labs/shared/        the Floci compose file and the pinned 1.7.0 spike
-demos/              the M01 agent-preview demo, named by path in Chapter 4 and Appendix B
-```
-
-Chapter *N* maps to `modules/module-NN-*`, with one exception: Chapter 13 is `capstone/`.
-
-Every module's `lab/run.sh` is a real check, not a smoke test. Run it.
-
-## What is not here
-
-Course production material — narrator notes, slide decks, diagram sources, per-module
-specifications and the authoring plan — lives in a separate private repository. This repo
-holds what you run and what you read.
-
-## The course
-
-The book is one half of a pair. The video course of the same name is at
-[School of DevOps](https://www.udemy.com/course/ai-driven-infrastructure-as-code-iac-and-cloud-automation/),
-and its labs repository keeps moving as the tools do. This repository does not: it is
-pinned to the book.
+This repository is scheduled for deletion.
